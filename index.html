@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vaciado de Pisos Barcelona | Presupuesto Instantáneo con IA</title>
+<meta name="description" content="Vaciado de pisos en Barcelona y área metropolitana. Presupuesto instantáneo con IA solo con fotos. Sin visita previa. L'Hospitalet, Badalona, Cornellà.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #fafaf8;
+    --green: #2d6a4f;
+    --green-mid: #40916c;
+    --green-light: #52b788;
+    --green-pale: #d8f3dc;
+    --accent: #e76f51;
+    --gray: #6b7280;
+    --border: #e5e7eb;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--black); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem;
+    background: rgba(250,250,248,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--green); }
+  .nav-logo span { color: var(--black); }
+  .nav-cta {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: #25D366; color: white;
+    padding: 0.55rem 1.2rem; border-radius: 50px;
+    font-weight: 600; font-size: 0.88rem; text-decoration: none;
+    box-shadow: 0 2px 12px rgba(37,211,102,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(37,211,102,0.4); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; padding: 7rem 2rem 4rem;
+    max-width: 1200px; margin: 0 auto; gap: 4rem;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--green-pale); color: var(--green);
+    padding: 0.4rem 1rem; border-radius: 50px;
+    font-size: 0.82rem; font-weight: 600; margin-bottom: 1.5rem;
+  }
+  .hero-badge::before {
+    content: ''; width: 8px; height: 8px;
+    background: var(--green-light); border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.4rem); font-weight: 900;
+    line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 1.2rem;
+  }
+  .hero h1 em { font-style: normal; color: var(--green); }
+  .hero-sub { font-size: 1.05rem; color: var(--gray); line-height: 1.7; margin-bottom: 2rem; font-weight: 300; }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: var(--black); color: white;
+    padding: 1rem 2rem; border-radius: 50px;
+    font-weight: 600; font-size: 1rem; text-decoration: none;
+    border: 2px solid var(--black); transition: all 0.25s;
+  }
+  .btn-primary:hover { background: var(--green); border-color: var(--green); transform: translateY(-2px); }
+  .btn-whatsapp {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: #25D366; color: white;
+    padding: 1rem 2rem; border-radius: 50px;
+    font-weight: 600; font-size: 1rem; text-decoration: none;
+    box-shadow: 0 4px 16px rgba(37,211,102,0.3); transition: all 0.25s;
+  }
+  .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,0.45); }
+  .hero-trust { display: flex; align-items: center; gap: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  .trust-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: var(--gray); font-weight: 500; }
+  .trust-item .icon { color: var(--green); }
+
+  /* AI ANALYZER CARD */
+  .ai-card {
+    background: var(--black); border-radius: 24px; padding: 2rem;
+    position: relative; overflow: hidden;
+  }
+  .ai-card::before {
+    content: ''; position: absolute; top: -50px; right: -50px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(82,183,136,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .ai-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(82,183,136,0.15); border: 1px solid rgba(82,183,136,0.3);
+    color: var(--green-light); padding: 0.3rem 0.8rem; border-radius: 50px;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em;
+    text-transform: uppercase; margin-bottom: 1.2rem;
+  }
+  .ai-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: white; font-weight: 700; margin-bottom: 1rem; }
+
+  /* UPLOAD ZONE */
+  .upload-zone {
+    border: 2px dashed rgba(82,183,136,0.35); border-radius: 14px;
+    padding: 1.5rem 1rem; text-align: center; cursor: pointer;
+    transition: all 0.3s; margin-bottom: 1rem;
+    background: rgba(255,255,255,0.02);
+  }
+  .upload-zone:hover, .upload-zone.drag { border-color: var(--green-light); background: rgba(82,183,136,0.06); }
+  .upload-zone .icon { font-size: 1.8rem; margin-bottom: 0.5rem; display: block; }
+  .upload-zone p { font-size: 0.82rem; color: rgba(255,255,255,0.5); margin-bottom: 0.8rem; }
+  .upload-btn-small {
+    background: var(--green); color: white; border: none;
+    padding: 0.5rem 1.2rem; border-radius: 50px;
+    font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  }
+
+  /* PREVIEWS */
+  .preview-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 0.5rem; margin-bottom: 0.8rem;
+  }
+  .preview-item { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; }
+  .preview-item img { width: 100%; height: 100%; object-fit: cover; }
+  .preview-remove {
+    position: absolute; top: 2px; right: 2px;
+    background: rgba(0,0,0,0.7); color: white; border: none;
+    border-radius: 50%; width: 18px; height: 18px;
+    cursor: pointer; font-size: 0.6rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* CONTEXT */
+  .context-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.8rem; }
+  .ctx-group label { display: block; font-size: 0.7rem; color: rgba(255,255,255,0.45); margin-bottom: 2px; }
+  .ctx-group select, .ctx-group textarea {
+    width: 100%; background: #fff; border: 1px solid #d1d5db;
+    border-radius: 8px; padding: 0.45rem 0.6rem;
+    font-family: inherit; font-size: 0.78rem; color: #111;
+  }
+  .ctx-full { grid-column: 1/-1; }
+
+  /* ANALYZE BTN */
+  .analyze-btn {
+    width: 100%; background: linear-gradient(135deg, var(--green), var(--green-mid));
+    color: white; border: none; border-radius: 12px; padding: 0.9rem;
+    font-family: inherit; font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    gap: 0.5rem; transition: all 0.3s;
+  }
+  .analyze-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(45,106,79,0.4); }
+  .analyze-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* LOADING */
+  .loading { display: none; text-align: center; padding: 1.5rem 0; }
+  .loading.active { display: block; }
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid rgba(82,183,136,0.2); border-top-color: var(--green-light);
+    border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 0.8rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading p { font-size: 0.82rem; color: rgba(255,255,255,0.5); }
+
+  /* RESULT */
+  .result { display: none; }
+  .result.active { display: block; animation: slideUp 0.4s ease; }
+  @keyframes slideUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .result-price {
+    background: var(--green); border-radius: 12px; padding: 1rem 1.2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 0.8rem;
+  }
+  .result-price-label { font-size: 0.7rem; color: rgba(255,255,255,0.7); margin-bottom: 2px; }
+  .result-price-value { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: white; }
+  .result-conf { text-align: right; }
+  .result-conf-label { font-size: 0.65rem; color: rgba(255,255,255,0.6); margin-bottom: 3px; }
+  .conf-bar { width: 80px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden; margin-bottom: 2px; }
+  .conf-fill { height: 100%; background: white; border-radius: 2px; transition: width 1s ease; }
+  .conf-pct { font-size: 0.78rem; font-weight: 700; color: white; }
+  .result-analysis {
+    background: rgba(255,255,255,0.04); border-radius: 10px; padding: 0.9rem;
+    font-size: 0.8rem; color: rgba(255,255,255,0.6); line-height: 1.65;
+    margin-bottom: 0.8rem;
+  }
+  .result-items { display: flex; flex-direction: column; gap: 4px; margin-bottom: 0.8rem; }
+  .result-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.4rem 0.6rem; background: rgba(255,255,255,0.03); border-radius: 7px;
+    font-size: 0.76rem;
+  }
+  .item-name { color: rgba(255,255,255,0.65); }
+  .item-impact { font-weight: 600; font-size: 0.7rem; }
+  .impact-alto { color: #f4a261; }
+  .impact-medio { color: var(--green-light); }
+  .impact-bajo { color: #9ca3af; }
+  .result-warning {
+    background: rgba(231,111,81,0.08); border: 1px solid rgba(231,111,81,0.2);
+    border-radius: 8px; padding: 0.6rem 0.8rem;
+    font-size: 0.76rem; color: rgba(255,255,255,0.6); margin-bottom: 6px;
+  }
+  .result-cta { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.8rem; }
+  .cta-wa {
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    background: #25D366; color: white; padding: 0.7rem; border-radius: 10px;
+    font-weight: 700; font-size: 0.82rem; text-decoration: none;
+  }
+  .cta-reset {
+    background: rgba(255,255,255,0.07); color: white; border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px; padding: 0.7rem; font-weight: 600; font-size: 0.82rem; cursor: pointer;
+  }
+  .error-msg {
+    display: none; background: rgba(231,111,81,0.1); border: 1px solid rgba(231,111,81,0.25);
+    border-radius: 8px; padding: 0.7rem; color: #f4a261; font-size: 0.8rem;
+    text-align: center; margin-bottom: 0.6rem;
+  }
+  .error-msg.active { display: block; }
+
+  /* STEPS */
+  .section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-label { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); margin-bottom: 0.8rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 900; line-height: 1.15; margin-bottom: 0.8rem; }
+  .section-sub { font-size: 1rem; color: var(--gray); line-height: 1.7; max-width: 540px; font-weight: 300; }
+  .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
+  .step-card { padding: 2rem; border-radius: 18px; border: 1px solid var(--border); background: white; transition: transform 0.3s, box-shadow 0.3s; }
+  .step-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.08); }
+  .step-number { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 900; color: var(--green-pale); line-height: 1; margin-bottom: 0.8rem; }
+  .step-icon { font-size: 1.8rem; margin-bottom: 0.8rem; display: block; }
+  .step-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .step-desc { font-size: 0.88rem; color: var(--gray); line-height: 1.6; font-weight: 300; }
+  .step-time { display: inline-block; margin-top: 0.8rem; background: var(--green-pale); color: var(--green); padding: 0.25rem 0.7rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
+
+  /* SERVICES */
+  .services-bg { background: var(--black); padding: 5rem 2rem; }
+  .services-inner { max-width: 1200px; margin: 0 auto; }
+  .services-bg .section-label { color: var(--green-light); }
+  .services-bg .section-title { color: white; }
+  .services-bg .section-sub { color: rgba(255,255,255,0.5); }
+  .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-top: 3rem; }
+  .service-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 1.8rem; transition: all 0.3s; }
+  .service-card:hover { background: rgba(82,183,136,0.08); border-color: rgba(82,183,136,0.25); }
+  .service-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+  .service-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: white; margin-bottom: 0.6rem; }
+  .service-desc { font-size: 0.88rem; color: rgba(255,255,255,0.5); line-height: 1.6; font-weight: 300; margin-bottom: 1rem; }
+  .service-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .service-tag { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.6); padding: 0.25rem 0.6rem; border-radius: 50px; font-size: 0.72rem; font-weight: 500; }
+
+  /* ZONES */
+  .zones-section { background: #f5f0e8; padding: 5rem 2rem; }
+  .zones-inner { max-width: 1200px; margin: 0 auto; }
+  .zones-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin-top: 2.5rem; }
+  .zone-pill { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 0.8rem 1rem; text-align: center; font-weight: 600; font-size: 0.88rem; transition: all 0.2s; }
+  .zone-pill:hover, .zone-pill.featured { background: var(--green); color: white; border-color: var(--green); }
+
+  /* REVIEWS */
+  .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 3rem; }
+  .review-card { background: white; border: 1px solid var(--border); border-radius: 18px; padding: 1.6rem; transition: transform 0.3s, box-shadow 0.3s; }
+  .review-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.07); }
+  .review-stars { color: #f59e0b; font-size: 0.88rem; margin-bottom: 0.8rem; }
+  .review-text { font-size: 0.88rem; color: var(--gray); line-height: 1.65; font-weight: 300; margin-bottom: 1rem; }
+  .review-author { display: flex; align-items: center; gap: 0.7rem; }
+  .review-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: white; flex-shrink: 0; }
+  .review-name { font-weight: 600; font-size: 0.85rem; }
+  .review-location { font-size: 0.75rem; color: var(--gray); }
+
+  /* FAQ */
+  .faq-list { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 0.8rem; max-width: 780px; }
+  .faq-item { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: white; }
+  .faq-q { width: 100%; background: none; border: none; padding: 1.2rem 1.4rem; text-align: left; font-family: inherit; font-size: 0.95rem; font-weight: 600; color: var(--black); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 1rem; transition: background 0.2s; }
+  .faq-q:hover { background: #f9fafb; }
+  .faq-q .arrow { font-size: 1.1rem; color: var(--green); transition: transform 0.3s; flex-shrink: 0; }
+  .faq-item.open .faq-q .arrow { transform: rotate(45deg); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; font-size: 0.9rem; color: var(--gray); line-height: 1.7; font-weight: 300; }
+  .faq-item.open .faq-a { max-height: 300px; }
+  .faq-a-inner { padding: 0 1.4rem 1.2rem; border-top: 1px solid var(--border); padding-top: 0.9rem; }
+
+  /* CTA FINAL */
+  .cta-section { background: var(--green); padding: 5rem 2rem; text-align: center; }
+  .cta-inner { max-width: 680px; margin: 0 auto; }
+  .cta-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; color: white; margin-bottom: 1rem; line-height: 1.15; }
+  .cta-section p { color: rgba(255,255,255,0.75); font-size: 1rem; margin-bottom: 2rem; font-weight: 300; }
+  .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-white { display: inline-flex; align-items: center; gap: 0.6rem; background: white; color: var(--green); padding: 1rem 2rem; border-radius: 50px; font-weight: 700; font-size: 1rem; text-decoration: none; transition: all 0.25s; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+  .btn-outline-white { display: inline-flex; align-items: center; gap: 0.6rem; background: transparent; color: white; padding: 1rem 2rem; border-radius: 50px; font-weight: 600; font-size: 1rem; text-decoration: none; border: 2px solid rgba(255,255,255,0.5); transition: all 0.25s; }
+  .btn-outline-white:hover { border-color: white; background: rgba(255,255,255,0.1); }
+
+  /* FOOTER */
+  footer { background: var(--black); padding: 2.5rem 2rem; text-align: center; color: rgba(255,255,255,0.35); font-size: 0.82rem; }
+  footer a { color: var(--green-light); text-decoration: none; }
+
+  /* WA FLOAT */
+  .wa-float { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200; background: #25D366; color: white; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; text-decoration: none; box-shadow: 0 4px 20px rgba(37,211,102,0.5); transition: transform 0.2s; }
+  .wa-float:hover { transform: scale(1.1); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding-top: 5rem; gap: 2.5rem; }
+    .steps-grid, .services-grid, .reviews-grid { grid-template-columns: 1fr; }
+    .zones-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-visual { order: -1; }
+    .context-grid { grid-template-columns: 1fr; }
+    .result-cta { grid-template-columns: 1fr; }
+  }
+
+  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Vacía<span>BCN</span></div>
+  <a href="https://wa.me/34600000000?text=Hola%2C%20necesito%20presupuesto%20para%20vaciado%20de%20piso" class="nav-cta" target="_blank">💬 Presupuesto gratis</a>
+</nav>
+
+<!-- HERO -->
+<section style="background: var(--white);">
+  <div class="hero">
+    <div class="fade-in">
+      <div class="hero-badge">Servicio disponible hoy</div>
+      <h1>Vaciado de pisos en <em>Barcelona</em><br>con presupuesto instantáneo</h1>
+      <p class="hero-sub">Sube fotos de tu piso y nuestra IA analiza el contenido y genera un presupuesto en segundos. Sin visita previa. Para particulares y empresas.</p>
+      <div class="hero-actions">
+        <a href="#analizador" class="btn-primary">🤖 Calcular con IA</a>
+        <a href="https://wa.me/34600000000?text=Hola%2C%20necesito%20presupuesto%20para%20vaciado%20de%20piso" class="btn-whatsapp" target="_blank">💬 WhatsApp</a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-item"><span class="icon">✓</span> Sin visita previa</div>
+        <div class="trust-item"><span class="icon">✓</span> Precio cerrado</div>
+        <div class="trust-item"><span class="icon">✓</span> Reciclaje responsable</div>
+        <div class="trust-item"><span class="icon">✓</span> 48h de servicio</div>
+      </div>
+    </div>
+
+    <!-- AI ANALYZER -->
+    <div class="fade-in" id="analizador">
+      <div class="ai-card">
+        <div class="ai-badge">✦ Inteligencia Artificial</div>
+        <div class="ai-title">Sube fotos → presupuesto en segundos</div>
+
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+          <span class="icon">📸</span>
+          <p>Arrastra las fotos o haz clic · Máximo 6 fotos</p>
+          <button class="upload-btn-small" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">Seleccionar fotos</button>
+          <input type="file" id="fileInput" accept="image/*" multiple style="display:none">
+        </div>
+
+        <div class="preview-grid" id="previewGrid"></div>
+
+        <div class="context-grid">
+          <div class="ctx-group">
+            <label>Tipo de espacio</label>
+            <select id="tipo">
+              <option value="piso">Piso / Apartamento</option>
+              <option value="estudio">Estudio</option>
+              <option value="local">Local comercial</option>
+              <option value="oficina">Oficina</option>
+              <option value="nave">Nave / Almacén</option>
+              <option value="garaje">Garaje / Trastero</option>
+            </select>
+          </div>
+          <div class="ctx-group">
+            <label>Metros aproximados</label>
+            <select id="m2">
+              <option value="no_se">No lo sé</option>
+              <option value="menos_40">Menos de 40m²</option>
+              <option value="40_70">40 – 70m²</option>
+              <option value="70_100">70 – 100m²</option>
+              <option value="100_150">100 – 150m²</option>
+              <option value="mas_150">Más de 150m²</option>
+            </select>
+          </div>
+          <div class="ctx-group">
+            <label>Motivo</label>
+            <select id="motivo">
+              <option value="herencia">Herencia / Fallecimiento</option>
+              <option value="mudanza">Mudanza</option>
+              <option value="reforma">Pre-reforma</option>
+              <option value="cierre">Cierre de negocio</option>
+              <option value="alquiler">Para alquiler</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+          <div class="ctx-group">
+            <label>Urgencia</label>
+            <select id="urgencia">
+              <option value="flexible">Flexible</option>
+              <option value="esta_semana">Esta semana</option>
+              <option value="urgente">Urgente 48h</option>
+            </select>
+          </div>
+          <div class="ctx-group ctx-full">
+            <label>Algo más que debamos saber</label>
+            <textarea id="extra" rows="2" placeholder="Ej: no hay ascensor, hay un piano, mucha ropa..."></textarea>
+          </div>
+        </div>
+
+        <div class="error-msg" id="errorMsg"></div>
+
+        <button class="analyze-btn" id="analyzeBtn" onclick="analyze()" disabled>
+          🔍 Analizar y generar presupuesto
+        </button>
+
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+          <p>Analizando tus fotos con IA...</p>
+        </div>
+
+        <div class="result" id="result">
+          <div class="result-price">
+            <div>
+              <div class="result-price-label">Presupuesto orientativo</div>
+              <div class="result-price-value" id="priceValue">—</div>
+            </div>
+            <div class="result-conf">
+              <div class="result-conf-label">Confianza</div>
+              <div class="conf-bar"><div class="conf-fill" id="confFill" style="width:0%"></div></div>
+              <div class="conf-pct" id="confPct">—</div>
+            </div>
+          </div>
+          <div class="result-items" id="resultItems"></div>
+          <div class="result-analysis" id="resultAnalysis"></div>
+          <div id="resultWarnings"></div>
+          <div class="result-cta">
+            <a class="cta-wa" id="waLink" href="#" target="_blank">💬 Confirmar por WhatsApp</a>
+            <button class="cta-reset" onclick="resetForm()">🔄 Nuevo análisis</button>
+          </div>
+        </div>
+
+        <p style="text-align:center;font-size:0.68rem;color:rgba(255,255,255,0.25);margin-top:0.8rem;">Presupuesto orientativo generado por IA · El precio final puede variar</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section style="background:#f3f4f6;padding:5rem 2rem;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="fade-in">
+      <div class="section-label">Así de fácil</div>
+      <h2 class="section-title">3 pasos. Tú no mueves nada.</h2>
+      <p class="section-sub">Sin visitas previas, sin papeleo, sin sorpresas en el precio final.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card fade-in">
+        <div class="step-number">01</div>
+        <span class="step-icon">📸</span>
+        <div class="step-title">Sube fotos y la IA calcula</div>
+        <p class="step-desc">Haz fotos de las habitaciones y súbelas al analizador. Recibes el presupuesto en segundos, sin llamadas ni esperas.</p>
+        <span class="step-time">⏱ Instantáneo</span>
+      </div>
+      <div class="step-card fade-in">
+        <div class="step-number">02</div>
+        <span class="step-icon">💬</span>
+        <div class="step-title">Confirmas por WhatsApp</div>
+        <p class="step-desc">Si el precio te convence, confirmas por WhatsApp. Precio cerrado, sin letra pequeña, sin costes ocultos.</p>
+        <span class="step-time">⏱ En minutos</span>
+      </div>
+      <div class="step-card fade-in">
+        <div class="step-number">03</div>
+        <span class="step-icon">✅</span>
+        <div class="step-title">Vaciamos en 48–72 horas</div>
+        <p class="step-desc">Nuestro equipo se encarga de todo. Retiramos, clasificamos y reciclamos. Tú solo abres la puerta.</p>
+        <span class="step-time">⏱ 48–72h</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<div class="services-bg">
+  <div class="services-inner">
+    <div class="fade-in">
+      <div class="section-label">Qué hacemos</div>
+      <h2 class="section-title">Para cualquier espacio<br>y situación.</h2>
+      <p class="section-sub">Herencias, mudanzas, reformas, cierres de negocio.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card fade-in">
+        <span class="service-icon">🏠</span>
+        <div class="service-title">Vaciado de pisos</div>
+        <p class="service-desc">Pisos heredados, mudanzas, pre-reforma. Con o sin muebles.</p>
+        <div class="service-tags"><span class="service-tag">Herencias</span><span class="service-tag">Mudanzas</span><span class="service-tag">Pre-reforma</span></div>
+      </div>
+      <div class="service-card fade-in">
+        <span class="service-icon">🏢</span>
+        <div class="service-title">Locales y oficinas</div>
+        <p class="service-desc">Cierre de negocio, traspaso, reforma de local comercial.</p>
+        <div class="service-tags"><span class="service-tag">Cierres</span><span class="service-tag">Traspasos</span><span class="service-tag">Oficinas</span></div>
+      </div>
+      <div class="service-card fade-in">
+        <span class="service-icon">🏭</span>
+        <div class="service-title">Naves industriales</div>
+        <p class="service-desc">Maquinaria, stock sobrante, mobiliario industrial. Grandes volúmenes.</p>
+        <div class="service-tags"><span class="service-tag">Maquinaria</span><span class="service-tag">Stock</span><span class="service-tag">Metales</span></div>
+      </div>
+      <div class="service-card fade-in">
+        <span class="service-icon">♻️</span>
+        <div class="service-title">Gestión responsable</div>
+        <p class="service-desc">Todo se clasifica. Lo reciclable se recicla. Certificado de gestión disponible.</p>
+        <div class="service-tags"><span class="service-tag">Reciclaje</span><span class="service-tag">Donación</span><span class="service-tag">Certificado</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ZONES -->
+<div class="zones-section">
+  <div class="zones-inner">
+    <div class="fade-in">
+      <div class="section-label">Dónde trabajamos</div>
+      <h2 class="section-title">Barcelona y área metropolitana</h2>
+    </div>
+    <div class="zones-grid fade-in">
+      <div class="zone-pill featured">📍 Barcelona</div>
+      <div class="zone-pill featured">📍 L'Hospitalet</div>
+      <div class="zone-pill">Badalona</div>
+      <div class="zone-pill">Cornellà</div>
+      <div class="zone-pill">Esplugues</div>
+      <div class="zone-pill">Sant Adrià</div>
+      <div class="zone-pill">Sant Joan Despí</div>
+      <div class="zone-pill">Gavà</div>
+      <div class="zone-pill">Viladecans</div>
+      <div class="zone-pill">El Prat</div>
+      <div class="zone-pill">Castelldefels</div>
+      <div class="zone-pill">¿Tu municipio? 💬</div>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEWS -->
+<section class="section">
+  <div class="fade-in">
+    <div class="section-label">Opiniones</div>
+    <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card fade-in">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Subí fotos del piso de mi madre y en 30 segundos tenía el presupuesto. Vinieron al día siguiente y lo vaciaron todo. Muy profesionales."</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:var(--green);">MC</div>
+        <div><div class="review-name">María C.</div><div class="review-location">L'Hospitalet de Llobregat</div></div>
+      </div>
+    </div>
+    <div class="review-card fade-in">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Cerré mi bar y necesitaba vaciarlo antes de devolver las llaves. Precio justo, llegaron puntuales, en 4 horas estaba vacío."</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:var(--accent);">JR</div>
+        <div><div class="review-name">Jordi R.</div><div class="review-location">Gràcia, Barcelona</div></div>
+      </div>
+    </div>
+    <div class="review-card fade-in">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Heredé el piso de mi tío lleno de muebles. La calculadora IA me dio el precio al instante. Muy recomendables."</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:#6366f1;">AM</div>
+        <div><div class="review-name">Ana M.</div><div class="review-location">Eixample, Barcelona</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="background:#f3f4f6;padding:5rem 2rem;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="fade-in">
+      <div class="section-label">Preguntas frecuentes</div>
+      <h2 class="section-title">Todo lo que necesitas saber</h2>
+    </div>
+    <div class="faq-list fade-in">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Necesito visita previa para el presupuesto?<span class="arrow">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">No. Sube fotos al analizador IA y recibes el presupuesto en segundos. Solo pedimos visita para casos muy especiales.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿El presupuesto puede cambiar el día del servicio?<span class="arrow">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">El precio que confirmamos por WhatsApp es el precio final. Sin sorpresas ni costes ocultos.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Qué hacéis con los muebles y objetos?<span class="arrow">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Clasificamos todo. Lo que tiene valor va a segunda mano o donación. El resto a gestores de residuos autorizados. Podemos emitir certificado de gestión.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿En cuánto tiempo podéis venir?<span class="arrow">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Habitualmente en 48–72 horas. Para casos urgentes consúltanos disponibilidad para el mismo día.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Trabajáis con herencias y trámites legales pendientes?<span class="arrow">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Sí, es uno de los casos más habituales. No necesitas tener todos los trámites cerrados para contratar el vaciado.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<div class="cta-section">
+  <div class="cta-inner fade-in">
+    <h2>¿Necesitas vaciar un piso en Barcelona?</h2>
+    <p>Presupuesto instantáneo con IA. Sin visita previa. Sin esperas.</p>
+    <div class="cta-buttons">
+      <a href="#analizador" class="btn-white">🤖 Calcular presupuesto con IA</a>
+      <a href="https://wa.me/34600000000?text=Hola%2C%20necesito%20presupuesto%20para%20vaciado%20de%20piso" class="btn-outline-white" target="_blank">💬 WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 VacíaBCN · Vaciado de pisos en Barcelona y área metropolitana</p>
+  <p style="margin-top:0.4rem;"><a href="#">Aviso legal</a> · <a href="#">Política de privacidad</a></p>
+</footer>
+
+<a href="https://wa.me/34600000000?text=Hola%2C%20necesito%20presupuesto%20para%20vaciado%20de%20piso" class="wa-float" target="_blank">💬</a>
+
+<script>
+  let files = [], previews = [];
+
+  // Upload
+  const uploadZone = document.getElementById('uploadZone');
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag'));
+  uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('drag'); addFiles(e.dataTransfer.files); });
+  document.getElementById('fileInput').addEventListener('change', e => addFiles(e.target.files));
+
+  function addFiles(raw) {
+    const imgs = Array.from(raw).filter(f => f.type.startsWith('image/')).slice(0, 6 - files.length);
+    imgs.forEach(f => {
+      files.push(f);
+      const r = new FileReader();
+      r.onload = e => {
+        previews.push(e.target.result);
+        renderPreviews();
+      };
+      r.readAsDataURL(f);
+    });
+    updateBtn();
+  }
+
+  function renderPreviews() {
+    const grid = document.getElementById('previewGrid');
+    grid.innerHTML = previews.map((src, i) => `
+      <div class="preview-item">
+        <img src="${src}" alt="">
+        <button class="preview-remove" onclick="removeFile(${i})">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function removeFile(i) {
+    files.splice(i, 1);
+    previews.splice(i, 1);
+    renderPreviews();
+    updateBtn();
+  }
+
+  function updateBtn() {
+    document.getElementById('analyzeBtn').disabled = files.length === 0;
+  }
+
+  // Compress
+  function compress(file) {
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+          const MAX = 800;
+          let w = img.width, h = img.height;
+          if (w > MAX || h > MAX) {
+            if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+            else { w = Math.round(w * MAX / h); h = MAX; }
+          }
+          const c = document.createElement('canvas');
+          c.width = w; c.height = h;
+          c.getContext('2d').drawImage(img, 0, 0, w, h);
+          resolve({ base64: c.toDataURL('image/jpeg', 0.8).split(',')[1], mediaType: 'image/jpeg' });
+        };
+        img.onerror = () => resolve({ base64: e.target.result.split(',')[1], mediaType: file.type });
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Analyze
+  async function analyze() {
+    if (!files.length) return;
+    document.getElementById('analyzeBtn').disabled = true;
+    document.getElementById('loading').classList.add('active');
+    document.getElementById('result').classList.remove('active');
+    document.getElementById('errorMsg').classList.remove('active');
+
+    try {
+      const images = await Promise.all(files.map(compress));
+      const context = {
+        tipo: document.getElementById('tipo').value,
+        m2: document.getElementById('m2').value,
+        motivo: document.getElementById('motivo').value,
+        urgencia: document.getElementById('urgencia').value,
+        extra: document.getElementById('extra').value
+      };
+
+      const res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ images, context })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error del servidor');
+
+      showResult(data, context);
+
+    } catch (e) {
+      const errEl = document.getElementById('errorMsg');
+      errEl.textContent = '⚠️ ' + (e.message || 'Error inesperado. Inténtalo de nuevo.');
+      errEl.classList.add('active');
+    } finally {
+      document.getElementById('loading').classList.remove('active');
+      document.getElementById('analyzeBtn').disabled = files.length === 0;
+    }
+  }
+
+  function showResult(data, context) {
+    const min = Number(data.precio_min || 300);
+    const max = Number(data.precio_max || Math.round(min * 1.4));
+    const conf = Math.min(95, Math.max(60, Number(data.confianza || 75)));
+
+    document.getElementById('priceValue').textContent = `${min.toLocaleString('es-ES')}€ – ${max.toLocaleString('es-ES')}€`;
+    document.getElementById('confPct').textContent = conf + '%';
+    setTimeout(() => { document.getElementById('confFill').style.width = conf + '%'; }, 200);
+
+    const impactLabel = { alto: '↑ Encarece', medio: '→ Moderado', bajo: '↓ Básico' };
+    const items = data.items || [];
+    document.getElementById('resultItems').innerHTML = items.map(item =>
+      `<div class="result-item"><span class="item-name">${item.n}</span><span class="item-impact impact-${item.i}">${impactLabel[item.i] || ''}</span></div>`
+    ).join('');
+
+    document.getElementById('resultAnalysis').textContent = (data.factores || '') + ' ' + (data.analisis || '');
+
+    const warns = data.advertencias || [];
+    document.getElementById('resultWarnings').innerHTML = warns.map(w =>
+      `<div class="result-warning">⚠️ ${w}</div>`
+    ).join('');
+
+    const waMsg = encodeURIComponent(`Hola, he usado vuestra calculadora IA. Mi ${context.tipo} tiene un presupuesto orientativo de ${min}€–${max}€. Me gustaría confirmar.`);
+    document.getElementById('waLink').href = `https://wa.me/34600000000?text=${waMsg}`;
+
+    document.getElementById('result').classList.add('active');
+  }
+
+  function resetForm() {
+    files = []; previews = [];
+    document.getElementById('previewGrid').innerHTML = '';
+    document.getElementById('fileInput').value = '';
+    document.getElementById('result').classList.remove('active');
+    document.getElementById('errorMsg').classList.remove('active');
+    document.getElementById('extra').value = '';
+    updateBtn();
+  }
+
+  // FAQ
+  function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const open = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!open) item.classList.add('open');
+  }
+
+  // Scroll animations
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
