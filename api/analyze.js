@@ -41,7 +41,7 @@ Precios referencia Barcelona 2025: estudio<40m²:200-350€, piso40-70m²:350-55
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-5',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 800,
         messages: [{ role: 'user', content }]
       })
